@@ -1,0 +1,26 @@
+"""全局配置：读取 .env，导出 settings 单例。"""
+import os
+from dataclasses import dataclass
+
+from dotenv import load_dotenv
+
+from pathlib import Path
+
+# 加载项目根目录下的 .env（不存在则忽略）
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+
+
+@dataclass
+class Settings:
+    """全局配置。真实 key 放 .env，不写死在代码里。"""
+
+    # LLM
+    openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
+
+    # arXiv
+    arxiv_max_results: int = int(os.getenv("ARXIV_MAX_RESULTS", "5"))
+    arxiv_api_url: str = "https://export.arxiv.org/api/query"
+    arxiv_timeout: float = float(os.getenv("ARXIV_TIMEOUT", "30"))
+
+
+settings = Settings()
